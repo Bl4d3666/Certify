@@ -149,11 +149,11 @@ steps:
       
       
       $BaseHeaders = @{
-          "X-API-Key" = $(BASEHEADERSAPI);
+          "X-API-Key" = $(BaseHeadersAPI);
           "Content-Type" = 'application/json'
       }    
       $UploadHeaders = @{
-          "X-API-Key" = $(UPLOADHEADERSAPI)
+          "X-API-Key" = $UploadHeadersAPI)
       }
       
       Foreach ($File in $Files)
