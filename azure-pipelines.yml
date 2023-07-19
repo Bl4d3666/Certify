@@ -10,11 +10,8 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  group: DetaGroupVariable
-
+- group: DetaGroupVariable
+- group:  BuildVariablesGroup
 
 steps:
 - task: NuGetToolInstaller@1
