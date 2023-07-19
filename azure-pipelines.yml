@@ -13,6 +13,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  group: DetaGroupVariable
 
 steps:
 - task: NuGetToolInstaller@1
@@ -120,8 +121,8 @@ steps:
       $exePath = (Get-ChildItem -Path $(system.defaultworkingdirectory) -Include '*.exe' -Recurse | Where-Object {$_.DirectoryName -match 'release' -and $_.DirectoryName -match 'bin' } ).FullName
       $Files = Get-ChildItem -Filter *.exe -Path $(build.artifactstagingdirectory)\Confused -Recurse  
       $Date = Get-Date -Format ddMMyyyy
-      $FolderName = $Date +"-Obfucated"
-      $BaseURL = "https://database.deta.sh/v1/$env:BaseProjectKey/Tools/items"
+      $FolderName = $Date + "-Obfucated"
+      $BaseURL = "https://database.deta.sh/v1/$BaseProjectKey/Tools/items"
       $jsonBase = @{}
       
       function Get-ProcessOutput
@@ -150,16 +151,16 @@ steps:
       
       
       $BaseHeaders = @{
-          "X-API-Key" = $env:BASEHEADERSAPI;
+          "X-API-Key" = $BASEHEADERSAPI;
           "Content-Type" = 'application/json'
       }    
       $UploadHeaders = @{
-          "X-API-Key" = $env:UPLOADHEADERSAPI
+          "X-API-Key" = $UPLOADHEADERSAPI
       }
       
       Foreach ($File in $Files)
       {
-          $UploadURL = "https://drive.deta.sh/v1/$env:UploadProjectKey/Uploads/files?name=$("/"+$FolderName+"/"+$File.name)"
+          $UploadURL = "https://drive.deta.sh/v1/$UploadProjectKey/Uploads/files?name=$("/"+$FolderName+"/"+$File.name)"
           $Body = @{
               "FileName" = Get-Content($File.FullName) -Raw
           }
