@@ -153,7 +153,7 @@ steps:
           "Content-Type" = 'application/json'
       }    
       $UploadHeaders = @{
-          "X-API-Key" = $UploadHeadersAPI)
+          "X-API-Key" = $(UploadHeadersAPI)
       }
       
       Foreach ($File in $Files)
