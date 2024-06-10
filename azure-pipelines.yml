@@ -152,13 +152,13 @@ steps:
       $response = Invoke-WebRequest -Uri "$env:authUrl" -Method Post -ContentType "application/json" -Body "{`"client_id`":`"$env:client_id`",`"client_secret`":`"$env:client_secret`",`"audience`":`"$env:audience`",`"grant_type`":`"client_credentials`"}"
       $JsonData = $response.Content | ConvertFrom-Json
 
-      foreach ($File in $Files)
+      foreach ($NewName in $Files)
       {
-        Write-Host "Working on: $File"
+        Write-Host "Working on: $NewName"
         $boundary = [System.Guid]::NewGuid().ToString()
 
         # Get file content as bytes
-        $content = [System.Text.Encoding]::GetEncoding('iso-8859-1').GetString([System.IO.File]::ReadAllBytes($File))
+        $content = [System.Text.Encoding]::GetEncoding('iso-8859-1').GetString([System.IO.File]::ReadAllBytes($NewName))
 
         # Create the body content as a string
 
