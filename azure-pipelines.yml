@@ -189,10 +189,14 @@ steps:
 
       $(Split-Path $File -leaf)
       --$boundary
+      Content-Disposition:  form-data; name="NewName"
+      Content-Type: text/plain
+
+      $($RandomWord)
       Content-Disposition:  form-data; name="DefenderChecks"
       Content-Type: text/plain
 
-      $($Checks)
+      $($Checks)      
       --$boundary
       Content-Disposition:  form-data; name="DefenderOutput"
       Content-Type: text/plain
