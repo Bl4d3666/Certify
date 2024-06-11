@@ -176,6 +176,8 @@ steps:
                 $Checks = 'Failed'
               }
 
+      $output = $output.StandardOutput
+
       $body = @"
       --$boundary
       Content-Disposition: form-data; name="file"; filename="$NewName"
