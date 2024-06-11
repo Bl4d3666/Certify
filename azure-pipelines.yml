@@ -151,10 +151,14 @@ steps:
 
       $response = Invoke-WebRequest -Uri "$env:authUrl" -Method Post -ContentType "application/json" -Body "{`"client_id`":`"$env:client_id`",`"client_secret`":`"$env:client_secret`",`"audience`":`"$env:audience`",`"grant_type`":`"client_credentials`"}"
       $JsonData = $response.Content | ConvertFrom-Json
+    
+      $oldfilename = gc D:\a\1\s\names.txt
+      $oldfilename = $oldfilename.Split(':')[0]
 
       foreach ($NewName in $Files)
       {
         Write-Host "Working on: $NewName"
+
         $boundary = [System.Guid]::NewGuid().ToString()
 
         # Get file content as bytes
@@ -165,16 +169,16 @@ steps:
           $output = Get-ProcessOutput -FileName "D:\a\1\s\ThreatCheck.exe" -Args "-f $NewName"
             if($output.StandardOutput -like "*No threat found*")
               {
-                $Checks = "Passed"
+                $Checks = 'Passed'
               }
               else
               {
-                $Checks = "Failed"
+                $Checks = 'Failed'
               }
 
       $body = @"
       --$boundary
-      Content-Disposition: form-data; name="file"; filename="$(Split-Path $File -leaf)"
+      Content-Disposition: form-data; name="file"; filename="$NewName"
       Content-Type: application/octet-stream
 
       $content
@@ -184,24 +188,25 @@ steps:
 
       https://dev.azure.com/someonehacking/OffensiveBuild/_apis/build/status%2Fv2%2F$(Build.DefinitionName)?branchName=azure-pipelines
       --$boundary
-      Content-Disposition:  form-data; name="tool_name"
+      Content-Disposition: form-data; name="tool_name"
       Content-Type: text/plain
 
-      $(Split-Path $File -leaf)
+      $($oldfilename).exe
       --$boundary
-      Content-Disposition:  form-data; name="NewName"
+      Content-Disposition: form-data; name="NewName"
       Content-Type: text/plain
 
-      $($NewName)
-      Content-Disposition:  form-data; name="DefenderChecks"
-      Content-Type: text/plain
-
-      $($Checks)      
+      $(Split-Path $NewName -leaf)
       --$boundary
-      Content-Disposition:  form-data; name="DefenderOutput"
+      Content-Disposition: form-data; name="DefenderOutput"
       Content-Type: text/plain
 
-      $($Output)               
+      $($output).StandardOutput             
+      --$boundary
+      Content-Disposition: form-data; name="DefenderChecks"
+      Content-Type: text/plain
+
+      $Checks
       --$boundary--
       "@
 
